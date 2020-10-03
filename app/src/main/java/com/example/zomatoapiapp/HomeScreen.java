@@ -13,17 +13,20 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -79,81 +82,111 @@ btn_next=findViewById(R.id.btn_next);
             dialog.show();
         }
         else {
-
-
             btn_next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // if ()
-                    OkHttpClient client = new OkHttpClient();
-                    final ProgressDialog progressDialog = new ProgressDialog(v.getContext());
-                    progressDialog.setMessage("Please Wait!\nLoading Data");
-                    progressDialog.show();
                     String getCities = Cities.getText().toString();
+                    if (TextUtils.isEmpty(getCities)) {
+                        Toast.makeText(HomeScreen.this, "Please Enter A City!...", Toast.LENGTH_SHORT).show();
+                    } else {
+                        OkHttpClient client = new OkHttpClient();
+                        final ProgressDialog progressDialog = new ProgressDialog(v.getContext());
+                        progressDialog.setMessage("Please Wait!\nLoading Data");
+                        progressDialog.show();
 
-                    final okhttp3.Request request = new okhttp3.Request.Builder()
-                            .url("https://developers.zomato.com/api/v2.1/locations?query=" + getCities)
-                            .header("user-key", "1b3c8b37ea96785391fa55c288ac385c")
-                            .get()
-                            .build();
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
-                        }
-
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                myResponse = response.body().string();
-                                progressDialog.dismiss();
-                                try {
-                                    JSONObject o = new JSONObject(myResponse);
-                                    JSONArray location_suggestions = o.getJSONArray("location_suggestions");
-                                    JSONObject entity_type = location_suggestions.getJSONObject(0);
-                                    // entity_type.getString("entity_id");
-
-                                    Log.i("ENTITY ID", entity_type.getString("entity_id"));
-                                    city_id=entity_type.getString("entity_id");
-                                    HomeScreen.this.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            city_name.setVisibility(View.VISIBLE);
-                                            Country.setVisibility(View.VISIBLE);
-                                            dancer.setVisibility(View.VISIBLE);
-                                            btn_next.setEnabled(false);
-                                            btn_next.setBackgroundColor(getResources().getColor(R.color.backBtn));
-                                            new Handler().postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-
-                                                    Intent mainIntent = new Intent(HomeScreen.this, MainActivity.class);
-                                                    mainIntent.putExtra("city_id",city_id);
-                                                    startActivity(mainIntent);
-                                                }
-                                            }, 5000);
-
-                                        }
-                                    });
-
-                                    city_name.setText(entity_type.getString("city_name"));
-
-                                    Country.setText(entity_type.getString("country_name"));
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                            } else {
-                                Log.i("Skipped", "Error");
+                        final okhttp3.Request request = new okhttp3.Request.Builder()
+                                .url("https://developers.zomato.com/api/v2.1/locations?query=" + getCities)
+                                .header("user-key", "1b3c8b37ea96785391fa55c288ac385c")
+                                .get()
+                                .build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
                             }
-                        }
-                    });
+
+                            @Override
+                            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    myResponse = response.body().string();
+                                    progressDialog.dismiss();
+                                    JSONArray location_suggestions = null;
+                                    try {
+                                        JSONObject o = new JSONObject(myResponse);
+                                        location_suggestions = o.getJSONArray("location_suggestions");
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (location_suggestions.length() == 0) {
+                                        HomeScreen.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(HomeScreen.this, "No City By this name! Sorry! Search Again", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {
+
+                                        JSONObject entity_type = null;
+                                        try {
+                                            entity_type = location_suggestions.getJSONObject(0);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        // entity_type.getString("entity_id");
 
 
-                }
-            });
+                                        try {
+                                            city_id = entity_type.getString("entity_id");
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        HomeScreen.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                city_name.setVisibility(View.VISIBLE);
+                                                Country.setVisibility(View.VISIBLE);
+                                                dancer.setVisibility(View.VISIBLE);
+                                                btn_next.setEnabled(false);
+                                                btn_next.setBackgroundColor(getResources().getColor(R.color.backBtn));
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+
+                                                        Intent mainIntent = new Intent(HomeScreen.this, MainActivity.class);
+                                                        mainIntent.putExtra("city_id", city_id);
+                                                        startActivity(mainIntent);
+                                                    }
+                                                }, 5000);
+
+                                            }
+                                        });
+
+                                        try {
+                                            city_name.setText(entity_type.getString("city_name"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        try {
+                                            Country.setText(entity_type.getString("country_name"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+
+                                    }
+                                }
+                                else
+                                {
+                                    Log.i("Skipped","Error");
+                                }
+                            }
+                        });
+
+
+                    }
+                }  });
         }
 
     }

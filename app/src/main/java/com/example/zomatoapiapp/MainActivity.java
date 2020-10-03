@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -48,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter adapter;
     List<ListItem>listItems;
     String myResponse;
-    String city_id;
-
+    String city_id="NOOB";
+    String savedCity_id;
+    SharedPreferences x;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +63,22 @@ public class MainActivity extends AppCompatActivity {
         listItems=new ArrayList<>();
         Intent y=getIntent();
         city_id = y.getStringExtra("city_id");
-        Log.i("ID",city_id);
+        x=this.getSharedPreferences("com.example.zomatoapiapp",Context.MODE_PRIVATE);
+        if(city_id == null||city_id.length()==0)
+        {
+            savedCity_id = x.getString("city","");
+            Log.i("if",savedCity_id);
+           // Toast.makeText(this, savedCity_id, Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            x.edit().putString("city",city_id).apply();
+            savedCity_id=x.getString("city","");
+            Log.i("Saved",x.getString("city",""));
+            //Toast.makeText(this, savedCity_id, Toast.LENGTH_SHORT).show();
+        }
+
+
         ConnectivityManager connectivityManager= (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo=connectivityManager.getActiveNetworkInfo();
         if (networkInfo==null||!networkInfo.isConnected()||!networkInfo.isAvailable())
@@ -93,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.show();
 
             okhttp3.Request request=new okhttp3.Request.Builder()
-                    .url("https://developers.zomato.com/api/v2.1/search?entity_id=" + city_id + "&entity_type=city")
+                    .url("https://developers.zomato.com/api/v2.1/search?entity_id=" + savedCity_id + "&entity_type=city")
                     .header("user-key","1b3c8b37ea96785391fa55c288ac385c")
                     .get()
                     .build();
@@ -159,10 +177,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    @Override
-    public void onBackPressed(){
 
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
