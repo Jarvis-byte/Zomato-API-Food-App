@@ -133,41 +133,56 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonObject =new JSONObject(myResponse);
                             JSONArray array=jsonObject.getJSONArray("restaurants");
-                            for (int i=0;i<array.length();i++)
+                            if (array.length()==0)
                             {
 
-                                JSONObject o =array.getJSONObject(i);
-                                JSONObject rest=o.getJSONObject("restaurant");
-                                JSONObject rating=rest.getJSONObject("user_rating");
-                                JSONObject loc=rest.getJSONObject("location");
-                                //  Log.i("Rating",rating.toString());
-                                ListItem item=new ListItem(
-                                        rest.getString("name"),
-                                        rest.getString("cuisines"),
-                                        rest.getString("timings"),
-                                        rating.getString("aggregate_rating"),
-                                        rest.getString("phone_numbers"),
-                                        rest.getString("photos_url"),
-                                        rating.getString("votes"),
-                                        loc.getString("address"),
-                                        loc.getString("city")
-                                );
-                                listItems.add(item);
+                                MainActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(MainActivity.this, "No Restaurant Found! SORRY...", Toast.LENGTH_SHORT).show();
+                                        Intent intent=new Intent(MainActivity.this,HomeScreen.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                });
                             }
-                            MainActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adapter=new MyAdapter(listItems,getApplicationContext());
-                                    recyclerView.setAdapter(adapter);
+                            else {
+                                for (int i = 0; i < array.length(); i++) {
+
+                                    JSONObject o = array.getJSONObject(i);
+                                    JSONObject rest = o.getJSONObject("restaurant");
+                                    JSONObject rating = rest.getJSONObject("user_rating");
+                                    JSONObject loc = rest.getJSONObject("location");
+                                    //  Log.i("Rating",rating.toString());
+                                    ListItem item = new ListItem(
+                                            rest.getString("name"),
+                                            rest.getString("cuisines"),
+                                            rest.getString("timings"),
+                                            rating.getString("aggregate_rating"),
+                                            rest.getString("phone_numbers"),
+                                            rest.getString("photos_url"),
+                                            rating.getString("votes"),
+                                            loc.getString("address"),
+                                            loc.getString("city")
+                                    );
+                                    listItems.add(item);
                                 }
-                            });
+                                MainActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter = new MyAdapter(listItems, getApplicationContext());
+                                        recyclerView.setAdapter(adapter);
+                                    }
+                                });
 
 
-
-                        } catch (JSONException e) {
+                            } } //try end
+                        catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
+
+                    //if end
                     else {
                         Log.i("Skipped","Error");
                     }
@@ -200,7 +215,12 @@ public class MainActivity extends AppCompatActivity {
         });
         return true;
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(MainActivity.this,HomeScreen.class));
+        finish();
+    }
 
 
 }

@@ -50,6 +50,8 @@ TextView Country;
         setContentView(R.layout.activity_home_screen);
 Cities=findViewById(R.id.Cities_input);
 btn_next=findViewById(R.id.btn_next);
+
+
         Country=findViewById(R.id.Country);
         Country.setVisibility(View.INVISIBLE);
         city_name=findViewById(R.id.city_name);
@@ -85,7 +87,7 @@ btn_next=findViewById(R.id.btn_next);
             btn_next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String getCities = Cities.getText().toString();
+                    final String getCities = Cities.getText().toString();
                     if (TextUtils.isEmpty(getCities)) {
                         Toast.makeText(HomeScreen.this, "Please Enter A City!...", Toast.LENGTH_SHORT).show();
                     } else {
@@ -152,10 +154,13 @@ btn_next=findViewById(R.id.btn_next);
                                                 new Handler().postDelayed(new Runnable() {
                                                     @Override
                                                     public void run() {
-
+                                                        btn_next.setEnabled(true);
+                                                        btn_next.setBackground(getDrawable(R.drawable.blue_fill__rounded_color));
+                                                        Cities.setText("");
                                                         Intent mainIntent = new Intent(HomeScreen.this, MainActivity.class);
                                                         mainIntent.putExtra("city_id", city_id);
                                                         startActivity(mainIntent);
+
                                                     }
                                                 }, 5000);
 
@@ -188,6 +193,11 @@ btn_next=findViewById(R.id.btn_next);
                     }
                 }  });
         }
+
+    }
+
+    @Override
+    public void onBackPressed() {
 
     }
 }
