@@ -22,7 +22,7 @@
             android:layout_toRightOf="@+id/username_icon"
             android:background="@android:color/transparent"
             android:hint="Location"
-            android:inputType="textEmailAddress"
+            android:inputType="textNoSuggestions"
             android:maxLines="1"
             android:paddingLeft="17dp"
             android:paddingTop="15dp"
