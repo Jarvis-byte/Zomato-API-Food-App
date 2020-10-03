@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter adapter;
     List<ListItem>listItems;
     String myResponse;
+    String city_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         listItems=new ArrayList<>();
+        Intent y=getIntent();
+        city_id = y.getStringExtra("city_id");
+        Log.i("ID",city_id);
         ConnectivityManager connectivityManager= (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo=connectivityManager.getActiveNetworkInfo();
         if (networkInfo==null||!networkInfo.isConnected()||!networkInfo.isAvailable())
@@ -86,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
             final ProgressDialog progressDialog=new ProgressDialog(this);
             progressDialog.setMessage("Please Wait!\nLoading Data");
             progressDialog.show();
+
             okhttp3.Request request=new okhttp3.Request.Builder()
-                    .url("https://developers.zomato.com/api/v2.1/search?entity_id=11423&entity_type=city")
+                    .url("https://developers.zomato.com/api/v2.1/search?entity_id=" + city_id + "&entity_type=city")
                     .header("user-key","1b3c8b37ea96785391fa55c288ac385c")
                     .get()
                     .build();

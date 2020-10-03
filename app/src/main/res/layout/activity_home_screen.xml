@@ -5,49 +5,89 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fedd6a"
-    tools:context=".HomeScreen">
+    tools:context=".HomeScreen"
+    android:id="@+id/Relative_Layout">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="62dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginRight="62dp"
+        android:background="@drawable/blue_border_rounded_cornwe"
+        android:id="@+id/top">
+        <EditText
+            android:id="@+id/Cities_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/username_icon"
+            android:background="@android:color/transparent"
+            android:hint="Location"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:paddingLeft="17dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+           android:textSize="12sp" />
+        <ImageView
+            android:id="@+id/username_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:src="@drawable/ic_baseline_add_location_24" />
+
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top"
+        android:text="City name:Kolkata"
+android:id="@+id/city_name"
+        android:layout_margin="40dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top"
+        android:text="Country:India"
+        android:id="@+id/Country"
+        android:layout_margin="85dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top"
+        android:layout_gravity="center"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="120dp"
+        android:background="@drawable/blue_fill__rounded_color"
+        android:gravity="center"
+        android:text="Search"
+        android:textColor="#ffffff"
+        android:textSize="12sp" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/dancer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="500dp"
         android:src="@drawable/loading_bar"
 
-         />
+        />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="306dp"
-        android:layout_height="65dp"
-        android:text="Click On Restaurant's Name \t\t\t\t\t\t\t to go to it's Website"
-        android:textSize="24sp"
-        android:textStyle="bold"
-   android:layout_marginTop="350dp"
-        android:layout_marginLeft="60dp"/>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="600dp"
-        android:layout_marginLeft="130dp"
-        android:layout_marginBottom="53dp"
-        android:text="For City - 'Asansol'"
-        android:textAlignment="textStart"
-        android:textSize="18sp"
-        android:textStyle="bold"
 
-    />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="480dp"
-        android:layout_marginLeft="20dp"
-        android:text="Click On Search at the Top to search for Restaurants"
-        android:textSize="16sp"
-        android:textStyle="bold"
-     />
+
 </RelativeLayout>
