@@ -1,6 +1,5 @@
 # Zomato-API-Food-App
-This App is a basic restaurant searching app ,which use the ZOMATO API to search restaurant in any of the cities in INDIA. If Zomato do not have any information for the city you entered,then
-it show a toast message "No restaurant for this City..."
+This App is a basic restaurant searching app, which use the ZOMATO API to search restaurant in any of the cities in INDIA. If Zomato does not have any information for the city you entered, then it shows a toast message "No restaurant for this City..."
 
 ### Features
 *******************************
